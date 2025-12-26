@@ -1,0 +1,3544 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Billing Core API",
+    "description": "Subscription billing system with payment processing",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/ping": {
+      "get": {
+        "summary": "Ping",
+        "description": "Ping endpoint - returns pong",
+        "operationId": "ping_api_v1_ping_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{user_id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get User",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u043f\u043e ID",
+        "operationId": "get_user_api_v1_users__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update User",
+        "description": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f",
+        "operationId": "update_user_api_v1_users__user_id__put",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/transfer/{user_id}": {
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Transfer User",
+        "description": "\u041f\u0435\u0440\u0435\u0434\u0430\u0442\u044c \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u0434\u0440\u0443\u0433\u043e\u043c\u0443 telegram_id",
+        "operationId": "transfer_user_api_v1_users_transfer__user_id__put",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "new_telegram_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "New Telegram Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "List Users",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u0439 \u0441 \u043f\u0430\u0433\u0438\u043d\u0430\u0446\u0438\u0435\u0439",
+        "operationId": "list_users_api_v1_users__get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  },
+                  "title": "Response List Users Api V1 Users  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/stats/count": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Get User Stats",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0443 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u0439",
+        "operationId": "get_user_stats_api_v1_users_stats_count_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get User Stats Api V1 Users Stats Count Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/telegram": {
+      "post": {
+        "tags": [
+          "authentication"
+        ],
+        "summary": "Authenticate via Telegram",
+        "description": "Bot sends telegram_id and gets JWT",
+        "operationId": "auth_telegram_api_v1_auth_telegram_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelegramAuth"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/create": {
+      "post": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Create Subscription",
+        "description": "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0443",
+        "operationId": "create_subscription_api_v1_subscriptions_create_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionCreateRequestSchema"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/create-with-payment": {
+      "post": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Create Subscription With Payment",
+        "description": "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0443 \u0441 \u043f\u043b\u0430\u0442\u0435\u0436\u043e\u043c (\u043e\u0431\u044b\u0447\u043d\u043e\u0435 \u043e\u0444\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435 \u0431\u0435\u0437 \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430)",
+        "operationId": "create_subscription_with_payment_api_v1_subscriptions_create_with_payment_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionWithPaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionWithPaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/check-trial-eligibility/{user_id}": {
+      "get": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Check Trial Eligibility",
+        "description": "\u041f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e\u0441\u0442\u044c \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430 \u0434\u043b\u044f \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f",
+        "operationId": "check_trial_eligibility_api_v1_subscriptions_check_trial_eligibility__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrialEligibilityResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/create-trial": {
+      "post": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Create Trial Subscription",
+        "description": "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0443 \u0441 \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u043e\u043c",
+        "operationId": "create_trial_subscription_api_v1_subscriptions_create_trial_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrialRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTrialResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/user/{user_id}/active": {
+      "get": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Get User Active Subscription",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0430\u043a\u0442\u0438\u0432\u043d\u0443\u044e \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0443 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f",
+        "operationId": "get_user_active_subscription_api_v1_subscriptions_user__user_id__active_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/SubscriptionDetailResponse"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Get User Active Subscription Api V1 Subscriptions User  User Id  Active Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/user/{user_id}/all": {
+      "get": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Get User Subscriptions",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0432\u0441\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f",
+        "operationId": "get_user_subscriptions_api_v1_subscriptions_user__user_id__all_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSubscriptionInfo"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/{subscription_id}": {
+      "get": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Get Subscription",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0443 \u043f\u043e ID",
+        "operationId": "get_subscription_api_v1_subscriptions__subscription_id__get",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Subscription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionDetailResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/{subscription_id}/cancel": {
+      "patch": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Cancel Subscription",
+        "description": "\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0443\n\nQuery \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b:\n- with_refund=False (\u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e): \u041e\u0442\u043c\u0435\u043d\u0430 \u0431\u0435\u0437 \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u0430, \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0430 \u0430\u043a\u0442\u0438\u0432\u043d\u0430 \u0434\u043e end_date\n- with_refund=True: \u041e\u0442\u043c\u0435\u043d\u0430 \u0441 \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u043e\u043c, \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0430 \u043e\u0442\u043c\u0435\u043d\u044f\u0435\u0442\u0441\u044f \u0441\u0440\u0430\u0437\u0443",
+        "operationId": "cancel_subscription_api_v1_subscriptions__subscription_id__cancel_patch",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Subscription Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelSubscriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/": {
+      "get": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Get All Subscriptions",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0432\u0441\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0432 \u0441\u0438\u0441\u0442\u0435\u043c\u0435 (\u0441 \u043f\u0430\u0433\u0438\u043d\u0430\u0446\u0438\u0435\u0439)",
+        "operationId": "get_all_subscriptions_api_v1_subscriptions__get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionResponse"
+                  },
+                  "title": "Response Get All Subscriptions Api V1 Subscriptions  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/{subscription_id}/apply-promotion": {
+      "post": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "Apply Promotion To Subscription",
+        "description": "\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434 \u043a \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0439 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0435 (\u043f\u0440\u043e\u0434\u043b\u0435\u0432\u0430\u0435\u0442 end_date \u043d\u0430 \u0431\u043e\u043d\u0443\u0441\u043d\u044b\u0435 \u0434\u043d\u0438)",
+        "operationId": "apply_promotion_to_subscription_api_v1_subscriptions__subscription_id__apply_promotion_post",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Subscription Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyPromotionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplyPromotionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/plans/": {
+      "get": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Get Subscription Plans",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0432\u0441\u0435 \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0435 \u043f\u043b\u0430\u043d\u044b \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a",
+        "operationId": "get_subscription_plans_api_v1_plans__get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                  },
+                  "title": "Response Get Subscription Plans Api V1 Plans  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Create Plan",
+        "description": "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u043d\u043e\u0432\u044b\u0439 \u043f\u043b\u0430\u043d \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438",
+        "operationId": "create_plan_api_v1_plans__post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionPlanCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/plans/{plan_id}": {
+      "get": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Get Subscription Plan",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043f\u043b\u0430\u043d \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u043f\u043e ID",
+        "operationId": "get_subscription_plan_api_v1_plans__plan_id__get",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Update Plan",
+        "description": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u043b\u0430\u043d \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438",
+        "operationId": "update_plan_api_v1_plans__plan_id__patch",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionPlanUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Delete Plan",
+        "description": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u043f\u043b\u0430\u043d \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438",
+        "operationId": "delete_plan_api_v1_plans__plan_id__delete",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/create": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Create Payment",
+        "description": "Endpoint: \u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u043e\u0434\u043d\u043e\u0441\u0442\u0430\u0434\u0438\u0439\u043d\u043e\u0433\u043e \u043f\u043b\u0430\u0442\u0435\u0436\u0430 (\u0441\u0442\u0430\u0440\u044b\u0439 \u043c\u0435\u0442\u043e\u0434)\n\n\u041f\u043b\u0430\u0442\u0435\u0436 \u0441\u0440\u0430\u0437\u0443 \u0441\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u043f\u043e\u0441\u043b\u0435 \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435\u043c.\n\nPOST /api/v1/payments/create\n{\n    \"user_id\": 1,\n    \"subscription_id\": 5,\n    \"amount\": 99.00,\n    \"return_url\": \"https://yourdomain.com/subscription/success\"\n}\n\nResponse:\n{\n    \"success\": true,\n    \"message\": \"\u041f\u043b\u0430\u0442\u0435\u0436 \u0441\u043e\u0437\u0434\u0430\u043d, \u043f\u0435\u0440\u0435\u0445\u043e\u0434\u0438\u0442\u0435 \u043d\u0430 \u043e\u043f\u043b\u0430\u0442\u0443\",\n    \"confirmation_url\": \"https://yookassa.ru/payments/...\",\n    \"yookassa_payment_id\": \"29f87ba5-000f-50df-a9f3-7a84e1cc9f45\"\n}",
+        "operationId": "create_payment_api_v1_payments_create_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/create-two-stage": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Create Payment Two Stage",
+        "description": "Endpoint: \u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0434\u0432\u0443\u0445\u0441\u0442\u0430\u0434\u0438\u0439\u043d\u043e\u0433\u043e \u043f\u043b\u0430\u0442\u0435\u0436\u0430 (\u043d\u043e\u0432\u044b\u0439 \u043c\u0435\u0442\u043e\u0434)\n\n\u041f\u043b\u0430\u0442\u0435\u0436 \u0441\u043d\u0430\u0447\u0430\u043b\u0430 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u0443\u0435\u0442\u0441\u044f, \u0437\u0430\u0442\u0435\u043c \u043d\u0443\u0436\u043d\u043e \u0432\u044b\u0437\u0432\u0430\u0442\u044c /capture \u0434\u043b\u044f \u0441\u043f\u0438\u0441\u0430\u043d\u0438\u044f.\n\u042d\u0442\u043e \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u043e\u0442\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u043b\u0430\u0442\u0435\u0436 \u0434\u043e \u0435\u0433\u043e \u043f\u0440\u043e\u0432\u0435\u0434\u0435\u043d\u0438\u044f.\n\nPOST /api/v1/payments/create-two-stage\n{\n    \"user_id\": 1,\n    \"subscription_id\": 5,\n    \"amount\": 99.00,\n    \"return_url\": \"https://yourdomain.com/subscription/success\"\n}\n\nResponse:\n{\n    \"success\": true,\n    \"message\": \"\u041f\u043b\u0430\u0442\u0435\u0436 \u0441\u043e\u0437\u0434\u0430\u043d, \u043f\u0435\u0440\u0435\u0445\u043e\u0434\u0438\u0442\u0435 \u043d\u0430 \u043e\u043f\u043b\u0430\u0442\u0443\",\n    \"confirmation_url\": \"https://yookassa.ru/payments/...\",\n    \"yookassa_payment_id\": \"29f87ba5-000f-50df-a9f3-7a84e1cc9f45\"\n}",
+        "operationId": "create_payment_two_stage_api_v1_payments_create_two_stage_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/{payment_id}/capture": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Capture Payment",
+        "description": "Endpoint: \u041f\u0440\u043e\u0432\u0435\u0441\u0442\u0438 (capture) \u0434\u0432\u0443\u0445\u0441\u0442\u0430\u0434\u0438\u0439\u043d\u044b\u0439 \u043f\u043b\u0430\u0442\u0435\u0436\n\n\u0421\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u0442 \u0440\u0430\u043d\u0435\u0435 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u043e\u0432\u0430\u043d\u043d\u044b\u0435 \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0430.\n\nPOST /api/v1/payments/{payment_id}/capture\n\nResponse:\n{\n    \"success\": true,\n    \"message\": \"\u041f\u043b\u0430\u0442\u0435\u0436 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u043f\u0440\u043e\u0432\u0435\u0434\u0435\u043d, \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0430 \u0430\u043a\u0442\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u0430\",\n    \"payment_id\": 1,\n    \"yookassa_payment_id\": \"29f87ba5-000f-50df-a9f3-7a84e1cc9f45\"\n}",
+        "operationId": "capture_payment_api_v1_payments__payment_id__capture_post",
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Payment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/{payment_id}/cancel": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Cancel Payment",
+        "description": "Endpoint: \u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u043b\u0430\u0442\u0435\u0436\n\n\u041e\u0442\u043c\u0435\u043d\u044f\u0435\u0442 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u043e\u0432\u0430\u043d\u043d\u044b\u0435 \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0430 \u0434\u043b\u044f \u0434\u0432\u0443\u0445\u0441\u0442\u0430\u0434\u0438\u0439\u043d\u043e\u0433\u043e \u043f\u043b\u0430\u0442\u0435\u0436\u0430.\n\u041c\u043e\u0436\u043d\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0434\u043b\u044f \u043e\u0442\u043c\u0435\u043d\u044b \u043f\u043b\u0430\u0442\u0435\u0436\u0430 \u0434\u043e \u0435\u0433\u043e \u043f\u0440\u043e\u0432\u0435\u0434\u0435\u043d\u0438\u044f.\n\nPOST /api/v1/payments/{payment_id}/cancel\n\nResponse:\n{\n    \"success\": true,\n    \"message\": \"\u041f\u043b\u0430\u0442\u0435\u0436 \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u043e\u0442\u043c\u0435\u043d\u0435\u043d\",\n    \"payment_id\": 1,\n    \"yookassa_payment_id\": \"29f87ba5-000f-50df-a9f3-7a84e1cc9f45\"\n}",
+        "operationId": "cancel_payment_api_v1_payments__payment_id__cancel_post",
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Payment Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/change-payment-method": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Change Payment Method",
+        "description": "Endpoint: \u0421\u043c\u0435\u043d\u0430 \u043a\u0430\u0440\u0442\u044b \u0434\u043b\u044f \u0430\u0432\u0442\u043e\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0439\n\n\u0421\u043e\u0437\u0434\u0430\u0435\u0442 \u043f\u043b\u0430\u0442\u0435\u0436 \u0441 \u043c\u0438\u043d\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0439 \u0441\u0443\u043c\u043c\u043e\u0439 (\u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e 1 \u0440\u0443\u0431\u043b\u044c) \u0434\u043b\u044f \u043f\u0440\u0438\u0432\u044f\u0437\u043a\u0438 \u043d\u043e\u0432\u043e\u0439 \u043a\u0430\u0440\u0442\u044b.\n\u041f\u043e\u0441\u043b\u0435 \u0443\u0441\u043f\u0435\u0448\u043d\u043e\u0439 \u043e\u043f\u043b\u0430\u0442\u044b \u043d\u043e\u0432\u0430\u044f \u043a\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c\u0441\u044f \u0434\u043b\u044f \u0430\u0432\u0442\u043e\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0439.\n\nPOST /api/v1/payments/change-payment-method\n{\n    \"user_id\": 1,\n    \"return_url\": \"https://yourdomain.com/payment/success\",\n    \"amount\": 1.0\n}\n\nResponse:\n{\n    \"success\": true,\n    \"message\": \"\u041f\u043b\u0430\u0442\u0435\u0436 \u0441\u043e\u0437\u0434\u0430\u043d \u0434\u043b\u044f \u043f\u0440\u0438\u0432\u044f\u0437\u043a\u0438 \u043d\u043e\u0432\u043e\u0439 \u043a\u0430\u0440\u0442\u044b. \u041f\u043e\u0441\u043b\u0435 \u0443\u0441\u043f\u0435\u0448\u043d\u043e\u0439 \u043e\u043f\u043b\u0430\u0442\u044b \u043a\u0430\u0440\u0442\u0430 \u0431\u0443\u0434\u0435\u0442 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0430.\",\n    \"confirmation_url\": \"https://yookassa.ru/payments/...\",\n    \"yookassa_payment_id\": \"29f87ba5-000f-50df-a9f3-7a84e1cc9f45\"\n}",
+        "operationId": "change_payment_method_api_v1_payments_change_payment_method_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePaymentMethodRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/webhook": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Yookassa Webhook",
+        "description": "Endpoint: Webhook \u043e\u0442 \u042e\u043a\u0430\u0441\u0441\u044b\n\n\u042e\u043a\u0430\u0441\u0441\u0430 \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442 POST \u0437\u0430\u043f\u0440\u043e\u0441 \u043d\u0430 \u044d\u0442\u043e\u0442 URL \u0441 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0435\u0439 \u043e \u043f\u043b\u0430\u0442\u0435\u0436\u0435.\n\u041e\u0431\u0440\u0430\u0431\u0430\u0442\u044b\u0432\u0430\u0435\u0442 \u043e\u0434\u043d\u043e\u0441\u0442\u0430\u0434\u0438\u0439\u043d\u044b\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0438.\n\n\u041d\u0443\u0436\u043d\u043e \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430\u0445 \u042e\u043a\u0430\u0441\u0441\u044b:\nhttps://yookassa.ru/my/merchant/integration/http-notifications\n\nURL \u0434\u043b\u044f \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0432 \u042e\u043a\u0430\u0441\u0441\u0435:\n- \u041b\u043e\u043a\u0430\u043b\u044c\u043d\u043e (\u0434\u043b\u044f \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f): http://localhost:8000/api/v1/payments/webhook\n- \u041f\u0440\u043e\u0434\u0430\u043a\u0448\u043d: https://yourdomain.com/api/v1/payments/webhook\n\n\u0412\u0430\u0436\u043d\u043e: Endpoint \u0434\u043e\u043b\u0436\u0435\u043d \u0431\u044b\u0442\u044c \u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d \u0438\u0437 \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0430 \u0434\u043b\u044f \u043f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u044f webhook \u043e\u0442 \u042e\u043a\u0430\u0441\u0441\u044b.\n\u0414\u043b\u044f \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u043e\u0439 \u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0438 \u043c\u043e\u0436\u043d\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c ngrok \u0438\u043b\u0438 \u0430\u043d\u0430\u043b\u043e\u0433\u0438\u0447\u043d\u044b\u0435 \u0441\u0435\u0440\u0432\u0438\u0441\u044b.\n\n\u041f\u0440\u0438\u043c\u0435\u0447\u0430\u043d\u0438\u0435: \u0414\u043b\u044f ngrok \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439\u0442\u0435 \u043a\u043e\u043c\u0430\u043d\u0434\u0443: ngrok http 8000",
+        "operationId": "yookassa_webhook_api_v1_payments_webhook_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/user/{user_id}": {
+      "get": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Get User Payments",
+        "description": "Endpoint: \u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0432\u0441\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0438 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u0441 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0435\u0439 \u043e \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0430\u0445\n\nGET /api/v1/payments/user/{user_id}?skip=0&limit=100\n\nResponse:\n[\n    {\n        \"id\": 1,\n        \"user_id\": 1,\n        \"subscription_id\": 5,\n        \"yookassa_payment_id\": \"29f87ba5-000f-50df-a9f3-7a84e1cc9f45\",\n        \"amount\": 99.00,\n        \"currency\": \"RUB\",\n        \"status\": \"succeeded\",\n        \"payment_method\": \"manual\",\n        \"attempt_number\": 1,\n        \"created_at\": \"2025-01-27T12:00:00Z\",\n        \"updated_at\": \"2025-01-27T12:00:00Z\",\n        \"subscription_plan_name\": \"Premium\",\n        \"subscription_status\": \"active\"\n    }\n]",
+        "operationId": "get_user_payments_api_v1_payments_user__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043d\u044b\u0445 \u0437\u0430\u043f\u0438\u0441\u0435\u0439",
+              "default": 0,
+              "title": "Skip"
+            },
+            "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043d\u044b\u0445 \u0437\u0430\u043f\u0438\u0441\u0435\u0439"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "description": "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0437\u0430\u043f\u0438\u0441\u0435\u0439",
+              "default": 100,
+              "title": "Limit"
+            },
+            "description": "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0437\u0430\u043f\u0438\u0441\u0435\u0439"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentWithSubscriptionResponse"
+                  },
+                  "title": "Response Get User Payments Api V1 Payments User  User Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/payments/user/{user_id}/completed": {
+      "get": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Get User Completed Payments",
+        "description": "Endpoint: \u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043f\u043b\u0430\u0442\u0435\u0436\u0438 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u0432 \u043a\u043e\u043d\u0435\u0447\u043d\u044b\u0445 \u0441\u0442\u0430\u0442\u0443\u0441\u0430\u0445 (succeeded, cancelled, failed)\n\n\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0442\u043e\u043b\u044c\u043a\u043e \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043d\u044b\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0438 (\u0443\u0441\u043f\u0435\u0448\u043d\u044b\u0435, \u043e\u0442\u043c\u0435\u043d\u0435\u043d\u043d\u044b\u0435 \u0438\u043b\u0438 \u043d\u0435\u0443\u0434\u0430\u0447\u043d\u044b\u0435).\n\u041d\u0435 \u0432\u043a\u043b\u044e\u0447\u0430\u0435\u0442 pending \u0438 waiting_for_capture \u043f\u043b\u0430\u0442\u0435\u0436\u0438.\n\nGET /api/v1/payments/user/{user_id}/completed?skip=0&limit=100\n\nResponse:\n[\n    {\n        \"id\": 1,\n        \"user_id\": 1,\n        \"subscription_id\": 5,\n        \"yookassa_payment_id\": \"29f87ba5-000f-50df-a9f3-7a84e1cc9f45\",\n        \"amount\": 99.00,\n        \"currency\": \"RUB\",\n        \"status\": \"succeeded\",\n        \"payment_method\": \"manual\",\n        \"attempt_number\": 1,\n        \"created_at\": \"2025-01-27T12:00:00Z\",\n        \"updated_at\": \"2025-01-27T12:00:00Z\",\n        \"subscription_plan_name\": \"Premium\",\n        \"subscription_status\": \"active\"\n    }\n]",
+        "operationId": "get_user_completed_payments_api_v1_payments_user__user_id__completed_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043d\u044b\u0445 \u0437\u0430\u043f\u0438\u0441\u0435\u0439",
+              "default": 0,
+              "title": "Skip"
+            },
+            "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u043f\u0440\u043e\u043f\u0443\u0449\u0435\u043d\u043d\u044b\u0445 \u0437\u0430\u043f\u0438\u0441\u0435\u0439"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "description": "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0437\u0430\u043f\u0438\u0441\u0435\u0439",
+              "default": 100,
+              "title": "Limit"
+            },
+            "description": "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0437\u0430\u043f\u0438\u0441\u0435\u0439"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentWithSubscriptionResponse"
+                  },
+                  "title": "Response Get User Completed Payments Api V1 Payments User  User Id  Completed Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/process-today": {
+      "post": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Process Auto Payments Today",
+        "description": "\u0420\u0443\u0447\u043d\u043e\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0438 \u0430\u0432\u0442\u043e\u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439 \u0434\u043b\u044f \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a, \u0437\u0430\u043a\u0430\u043d\u0447\u0438\u0432\u0430\u044e\u0449\u0438\u0445\u0441\u044f \u0441\u0435\u0433\u043e\u0434\u043d\u044f.\n\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442 \u043d\u043e\u0432\u0443\u044e \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0443 - \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 Celery \u0437\u0430\u0434\u0430\u0447\u0443 collect_subscriptions_for_payment.\n\u041f\u043e\u043b\u0435\u0437\u043d\u043e \u0434\u043b\u044f \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f.\n\nPOST /api/v1/auto-payments/process-today\n\nReturns:\n    Dict \u0441 task_id \u0438 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u043e\u043c",
+        "operationId": "process_auto_payments_today_api_v1_auto_payments_process_today_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Process Auto Payments Today Api V1 Auto Payments Process Today Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/send-reminders": {
+      "post": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Send Payment Reminders",
+        "description": "\u0420\u0443\u0447\u043d\u043e\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u043d\u0430\u043f\u043e\u043c\u0438\u043d\u0430\u043d\u0438\u0439 \u043e \u043f\u0440\u0435\u0434\u0441\u0442\u043e\u044f\u0449\u0438\u0445 \u043f\u043b\u0430\u0442\u0435\u0436\u0430\u0445.\n\u041f\u043e\u043b\u0435\u0437\u043d\u043e \u0434\u043b\u044f \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f.\n\nPOST /api/v1/auto-payments/send-reminders\n\nReturns:\n    Dict \u0441 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0430\u043c\u0438 \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438",
+        "operationId": "send_payment_reminders_api_v1_auto_payments_send_reminders_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Send Payment Reminders Api V1 Auto Payments Send Reminders Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/subscriptions-ending-today": {
+      "get": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Get Subscriptions Ending Today",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u0437\u0430\u043a\u0430\u043d\u0447\u0438\u0432\u0430\u044e\u0442\u0441\u044f \u0441\u0435\u0433\u043e\u0434\u043d\u044f.\n\u041f\u043e\u043b\u0435\u0437\u043d\u043e \u0434\u043b\u044f \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u043f\u0435\u0440\u0435\u0434 \u0437\u0430\u043f\u0443\u0441\u043a\u043e\u043c \u0430\u0432\u0442\u043e\u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439.\n\nGET /api/v1/auto-payments/subscriptions-ending-today\n\nReturns:\n    List \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a \u0441 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0435\u0439",
+        "operationId": "get_subscriptions_ending_today_api_v1_auto_payments_subscriptions_ending_today_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Get Subscriptions Ending Today Api V1 Auto Payments Subscriptions Ending Today Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/subscriptions-ending-tomorrow": {
+      "get": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Get Subscriptions Ending Tomorrow",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u0437\u0430\u043a\u0430\u043d\u0447\u0438\u0432\u0430\u044e\u0442\u0441\u044f \u0437\u0430\u0432\u0442\u0440\u0430.\n\u041f\u043e\u043b\u0435\u0437\u043d\u043e \u0434\u043b\u044f \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u043f\u0435\u0440\u0435\u0434 \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u043e\u0439 \u043d\u0430\u043f\u043e\u043c\u0438\u043d\u0430\u043d\u0438\u0439.\n\nGET /api/v1/auto-payments/subscriptions-ending-tomorrow\n\nReturns:\n    List \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a \u0441 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0435\u0439",
+        "operationId": "get_subscriptions_ending_tomorrow_api_v1_auto_payments_subscriptions_ending_tomorrow_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Get Subscriptions Ending Tomorrow Api V1 Auto Payments Subscriptions Ending Tomorrow Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/test-subscription/{subscription_id}": {
+      "post": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Test Auto Payment For Subscription",
+        "description": "\u041f\u0440\u043e\u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0430\u0432\u0442\u043e\u043f\u043b\u0430\u0442\u0435\u0436 \u0434\u043b\u044f \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u043e\u0439 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438.\n\u041f\u043e\u043b\u0435\u0437\u043d\u043e \u0434\u043b\u044f \u043e\u0442\u043b\u0430\u0434\u043a\u0438.\n\nPOST /api/v1/auto-payments/test-subscription/{subscription_id}\n\nArgs:\n    subscription_id: ID \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0434\u043b\u044f \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f\n\nReturns:\n    Dict \u0441 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u043e\u043c \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f",
+        "operationId": "test_auto_payment_for_subscription_api_v1_auto_payments_test_subscription__subscription_id__post",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Subscription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Test Auto Payment For Subscription Api V1 Auto Payments Test Subscription  Subscription Id  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/stats": {
+      "get": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Get Auto Payment Stats",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0443 \u043f\u043e \u0430\u0432\u0442\u043e\u043f\u043b\u0430\u0442\u0435\u0436\u0430\u043c.\n\nGET /api/v1/auto-payments/stats\n\nReturns:\n    Dict \u0441\u043e \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u043e\u0439",
+        "operationId": "get_auto_payment_stats_api_v1_auto_payments_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Auto Payment Stats Api V1 Auto Payments Stats Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/simulate-subscription-ending/{subscription_id}": {
+      "post": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Simulate Subscription Ending",
+        "description": "\u0421\u0438\u043c\u0443\u043b\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 (\u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c end_date \u043d\u0430 \u0441\u0435\u0433\u043e\u0434\u043d\u044f).\n\u041f\u043e\u043b\u0435\u0437\u043d\u043e \u0434\u043b\u044f \u0442\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f \u0430\u0432\u0442\u043e\u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439 \u0431\u0435\u0437 \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u044f \u0440\u0435\u0430\u043b\u044c\u043d\u043e\u0433\u043e \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f.\n\nPOST /api/v1/auto-payments/simulate-subscription-ending/{subscription_id}\n\nArgs:\n    subscription_id: ID \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438\n\nReturns:\n    Dict \u0441 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u043e\u043c",
+        "operationId": "simulate_subscription_ending_api_v1_auto_payments_simulate_subscription_ending__subscription_id__post",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Subscription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Simulate Subscription Ending Api V1 Auto Payments Simulate Subscription Ending  Subscription Id  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/collect-subscriptions": {
+      "post": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Collect Subscriptions For Payment",
+        "description": "\u0420\u0443\u0447\u043d\u043e\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u0441\u0431\u043e\u0440\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a \u0434\u043b\u044f \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0438 (\u043d\u043e\u0432\u0430\u044f \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430).\n\u0417\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 Celery \u0437\u0430\u0434\u0430\u0447\u0443 collect_subscriptions_for_payment.\n\nPOST /api/v1/auto-payments/collect-subscriptions\n\nReturns:\n    Dict \u0441 task_id \u0438 \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u043e\u043c",
+        "operationId": "collect_subscriptions_for_payment_api_v1_auto_payments_collect_subscriptions_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Collect Subscriptions For Payment Api V1 Auto Payments Collect Subscriptions Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/process-subscription/{subscription_id}": {
+      "post": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Process Single Subscription",
+        "description": "\u0420\u0443\u0447\u043d\u043e\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0438 \u043e\u0434\u043d\u043e\u0439 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 (\u043d\u043e\u0432\u0430\u044f \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430).\n\u0417\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 Celery \u0437\u0430\u0434\u0430\u0447\u0443 process_single_subscription_payment.\n\nPOST /api/v1/auto-payments/process-subscription/{subscription_id}\n\nArgs:\n    subscription_id: ID \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0434\u043b\u044f \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0438\n\nReturns:\n    Dict \u0441 task_id",
+        "operationId": "process_single_subscription_api_v1_auto_payments_process_subscription__subscription_id__post",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Subscription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Process Single Subscription Api V1 Auto Payments Process Subscription  Subscription Id  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/retry-payment/{payment_id}/{attempt}": {
+      "post": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Retry Auto Payment",
+        "description": "\u0420\u0443\u0447\u043d\u043e\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u043f\u043e\u043f\u044b\u0442\u043a\u0438 \u0430\u0432\u0442\u043e\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u044f (\u043d\u043e\u0432\u0430\u044f \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430).\n\u0417\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 Celery \u0437\u0430\u0434\u0430\u0447\u0443 retry_auto_payment_attempt.\n\nPOST /api/v1/auto-payments/retry-payment/{payment_id}/{attempt}\n\nArgs:\n    payment_id: ID \u043f\u043b\u0430\u0442\u0435\u0436\u0430\n    attempt: \u041d\u043e\u043c\u0435\u0440 \u043f\u043e\u043f\u044b\u0442\u043a\u0438 (\u043d\u0430\u0447\u0438\u043d\u0430\u0435\u0442\u0441\u044f \u0441 1)\n\nReturns:\n    Dict \u0441 task_id",
+        "operationId": "retry_auto_payment_api_v1_auto_payments_retry_payment__payment_id___attempt__post",
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Payment Id"
+            }
+          },
+          {
+            "name": "attempt",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Attempt"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Retry Auto Payment Api V1 Auto Payments Retry Payment  Payment Id   Attempt  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/process-cancelled-waiting": {
+      "post": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Process Cancelled Waiting",
+        "description": "\u0420\u0443\u0447\u043d\u043e\u0439 \u0437\u0430\u043f\u0443\u0441\u043a \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0438 cancelled_waiting \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a (\u043d\u043e\u0432\u0430\u044f \u0430\u0440\u0445\u0438\u0442\u0435\u043a\u0442\u0443\u0440\u0430).\n\u0417\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 Celery \u0437\u0430\u0434\u0430\u0447\u0443 process_cancelled_waiting_subscriptions.\n\nPOST /api/v1/auto-payments/process-cancelled-waiting\n\nReturns:\n    Dict \u0441 task_id",
+        "operationId": "process_cancelled_waiting_api_v1_auto_payments_process_cancelled_waiting_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Process Cancelled Waiting Api V1 Auto Payments Process Cancelled Waiting Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/redis-status": {
+      "get": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Get Redis Status",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u0442\u0430\u0442\u0443\u0441 Redis \u0434\u043b\u044f \u0430\u0432\u0442\u043e\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0439.\n\u041f\u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0432 Redis \u043d\u0430 \u0441\u0435\u0433\u043e\u0434\u043d\u044f.\n\nGET /api/v1/auto-payments/redis-status\n\nReturns:\n    Dict \u0441\u043e \u0441\u0442\u0430\u0442\u0443\u0441\u043e\u043c Redis",
+        "operationId": "get_redis_status_api_v1_auto_payments_redis_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Redis Status Api V1 Auto Payments Redis Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/cancelled-waiting": {
+      "get": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Get Cancelled Waiting Subscriptions",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a \u0441\u043e \u0441\u0442\u0430\u0442\u0443\u0441\u043e\u043c cancelled_waiting.\n\nGET /api/v1/auto-payments/cancelled-waiting\n\nReturns:\n    List \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a",
+        "operationId": "get_cancelled_waiting_subscriptions_api_v1_auto_payments_cancelled_waiting_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Get Cancelled Waiting Subscriptions Api V1 Auto Payments Cancelled Waiting Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auto-payments/config": {
+      "get": {
+        "tags": [
+          "auto-payments"
+        ],
+        "summary": "Get Auto Payment Config",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0442\u0435\u043a\u0443\u0449\u0438\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438 \u0430\u0432\u0442\u043e\u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439.\n\nGET /api/v1/auto-payments/config\n\nReturns:\n    Dict \u0441 \u0442\u0435\u043a\u0443\u0449\u0438\u043c\u0438 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0430\u043c\u0438",
+        "operationId": "get_auto_payment_config_api_v1_auto_payments_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Auto Payment Config Api V1 Auto Payments Config Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/promotions/": {
+      "get": {
+        "tags": [
+          "promotions"
+        ],
+        "summary": "Get All Promotions",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0432\u0441\u0435 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u044b \u0441 \u043f\u0430\u0433\u0438\u043d\u0430\u0446\u0438\u0435\u0439",
+        "operationId": "get_all_promotions_api_v1_promotions__get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Promotion"
+                  },
+                  "title": "Response Get All Promotions Api V1 Promotions  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "promotions"
+        ],
+        "summary": "Create Promotion",
+        "description": "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u043d\u043e\u0432\u044b\u0439 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434",
+        "operationId": "create_promotion_api_v1_promotions__post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromotionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Promotion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/promotions/available": {
+      "get": {
+        "tags": [
+          "promotions"
+        ],
+        "summary": "Get Available Promotions",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u044b\u0445 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u043e\u0432 \u0434\u043b\u044f \u0442\u0435\u043a\u0443\u0449\u0435\u0433\u043e \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u043e\u0432\u0430\u043d\u043d\u043e\u0433\u043e \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f.\n\n\u0412\u043a\u043b\u044e\u0447\u0430\u0435\u0442:\n- \u041e\u0431\u0449\u0438\u0435 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u044b (assigned_user_id = None)\n- \u041b\u0438\u0447\u043d\u044b\u0435 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u044b \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f (assigned_user_id = user_id)\n\n\u0418\u0441\u043a\u043b\u044e\u0447\u0430\u0435\u0442:\n- \u041f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u044b, \u043a\u043e\u0442\u043e\u0440\u044b\u0435 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u0443\u0436\u0435 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043b\n- \u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u044b\u0435 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u044b\n- \u041f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u044b \u0441 \u0438\u0441\u0442\u0435\u043a\u0448\u0438\u043c \u0441\u0440\u043e\u043a\u043e\u043c \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f\n- \u041f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u044b, \u0434\u043e\u0441\u0442\u0438\u0433\u0448\u0438\u0435 \u043b\u0438\u043c\u0438\u0442\u0430 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0439\n\n\u0422\u0440\u0435\u0431\u0443\u0435\u0442 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u0430\u0446\u0438\u0438 \u0447\u0435\u0440\u0435\u0437 JWT \u0442\u043e\u043a\u0435\u043d.",
+        "operationId": "get_available_promotions_api_v1_promotions_available_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Promotion"
+                  },
+                  "type": "array",
+                  "title": "Response Get Available Promotions Api V1 Promotions Available Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/promotions/{promotion_id}": {
+      "get": {
+        "tags": [
+          "promotions"
+        ],
+        "summary": "Get Promotion",
+        "description": "\u041f\u043e\u043b\u0443\u0447\u0438\u0442\u044c \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434 \u043f\u043e ID",
+        "operationId": "get_promotion_api_v1_promotions__promotion_id__get",
+        "parameters": [
+          {
+            "name": "promotion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Promotion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Promotion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "promotions"
+        ],
+        "summary": "Update Promotion",
+        "description": "\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434",
+        "operationId": "update_promotion_api_v1_promotions__promotion_id__patch",
+        "parameters": [
+          {
+            "name": "promotion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Promotion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromotionUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Promotion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "promotions"
+        ],
+        "summary": "Delete Promotion",
+        "description": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434",
+        "operationId": "delete_promotion_api_v1_promotions__promotion_id__delete",
+        "parameters": [
+          {
+            "name": "promotion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Promotion Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Root Post",
+        "description": "\u041e\u0431\u0440\u0430\u0431\u043e\u0442\u0447\u0438\u043a POST \u043d\u0430 \u043a\u043e\u0440\u043d\u0435\u0432\u043e\u0439 \u043f\u0443\u0442\u044c \u0434\u043b\u044f \u043e\u0442\u043b\u0430\u0434\u043a\u0438 webhook",
+        "operationId": "root_post__post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApplyPromotionRequest": {
+        "properties": {
+          "promotion_code": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Promotion Code",
+            "description": "\u041a\u043e\u0434 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+          }
+        },
+        "type": "object",
+        "required": [
+          "promotion_code"
+        ],
+        "title": "ApplyPromotionRequest",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0437\u0430\u043f\u0440\u043e\u0441\u0430 \u0434\u043b\u044f \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430 \u043a \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0439 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0435"
+      },
+      "ApplyPromotionResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "\u0423\u0441\u043f\u0435\u0448\u043d\u043e \u043b\u0438 \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "\u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u043e \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0435"
+          },
+          "subscription_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Subscription Id",
+            "description": "ID \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "old_end_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Old End Date",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u0434\u043e \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+          },
+          "new_end_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "New End Date",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u043f\u043e\u0441\u043b\u0435 \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d\u0438\u044f \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+          },
+          "bonus_days": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Bonus Days",
+            "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043d\u044b\u0445 \u0431\u043e\u043d\u0443\u0441\u043d\u044b\u0445 \u0434\u043d\u0435\u0439"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "message",
+          "subscription_id",
+          "old_end_date",
+          "new_end_date",
+          "bonus_days"
+        ],
+        "title": "ApplyPromotionResponse",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u043e\u0442\u0432\u0435\u0442\u0430 \u043f\u0440\u0438 \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d\u0438\u0438 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430 \u043a \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0435"
+      },
+      "CancelSubscriptionRequest": {
+        "properties": {
+          "with_refund": {
+            "type": "boolean",
+            "title": "With Refund",
+            "description": "\u0412\u044b\u043f\u043e\u043b\u043d\u0438\u0442\u044c \u0432\u043e\u0437\u0432\u0440\u0430\u0442 \u0441\u0440\u0435\u0434\u0441\u0442\u0432. \u0415\u0441\u043b\u0438 True - \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0430 \u043e\u0442\u043c\u0435\u043d\u044f\u0435\u0442\u0441\u044f \u0441\u0440\u0430\u0437\u0443 \u0441 \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u043e\u043c \u0437\u0430 \u043d\u0435\u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u043d\u0443\u044e \u0447\u0430\u0441\u0442\u044c. \u0415\u0441\u043b\u0438 False - \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0430 \u0430\u043a\u0442\u0438\u0432\u043d\u0430 \u0434\u043e end_date \u0431\u0435\u0437 \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u0430 (\u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e)",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "CancelSubscriptionRequest",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0437\u0430\u043f\u0440\u043e\u0441\u0430 \u043d\u0430 \u043e\u0442\u043c\u0435\u043d\u0443 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+      },
+      "ChangePaymentMethodRequest": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "return_url": {
+            "type": "string",
+            "minLength": 10,
+            "title": "Return Url",
+            "description": "URL \u0434\u043b\u044f \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u0430 \u043f\u043e\u0441\u043b\u0435 \u043e\u043f\u043b\u0430\u0442\u044b"
+          },
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Amount",
+            "description": "\u041c\u0438\u043d\u0438\u043c\u0430\u043b\u044c\u043d\u0430\u044f \u0441\u0443\u043c\u043c\u0430 \u0434\u043b\u044f \u043f\u0440\u0438\u0432\u044f\u0437\u043a\u0438 \u043a\u0430\u0440\u0442\u044b (\u043f\u043e \u0443\u043c\u043e\u043b\u0447\u0430\u043d\u0438\u044e 1 \u0440\u0443\u0431\u043b\u044c)",
+            "default": 1.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "return_url"
+        ],
+        "title": "ChangePaymentMethodRequest",
+        "description": "\u0417\u0430\u043f\u0440\u043e\u0441 \u043d\u0430 \u0441\u043c\u0435\u043d\u0443 \u043a\u0430\u0440\u0442\u044b \u0434\u043b\u044f \u0430\u0432\u0442\u043e\u0441\u043f\u0438\u0441\u0430\u043d\u0438\u0439"
+      },
+      "CreateTrialRequest": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "plan_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Plan Id",
+            "description": "ID \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "plan_id"
+        ],
+        "title": "CreateTrialRequest",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430"
+      },
+      "CreateTrialResponse": {
+        "properties": {
+          "subscription_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Subscription Id",
+            "description": "ID \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u043e\u0439 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "payment_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Payment Id",
+            "description": "ID \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u043e\u0433\u043e \u043f\u043b\u0430\u0442\u0435\u0436\u0430"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End Date",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "\u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u043e \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0435"
+          }
+        },
+        "type": "object",
+        "required": [
+          "subscription_id",
+          "payment_id",
+          "end_date",
+          "message"
+        ],
+        "title": "CreateTrialResponse",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u043e\u0442\u0432\u0435\u0442\u0430 \u043f\u0440\u0438 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0438 \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "PaymentCreateRequest": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "subscription_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Subscription Id",
+            "description": "ID \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Amount",
+            "description": "\u0421\u0443\u043c\u043c\u0430 \u043f\u043b\u0430\u0442\u0435\u0436\u0430"
+          },
+          "return_url": {
+            "type": "string",
+            "minLength": 10,
+            "title": "Return Url",
+            "description": "URL \u0434\u043b\u044f \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u0430 \u043f\u043e\u0441\u043b\u0435 \u043e\u043f\u043b\u0430\u0442\u044b"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "subscription_id",
+          "amount",
+          "return_url"
+        ],
+        "title": "PaymentCreateRequest",
+        "description": "\u0417\u0430\u043f\u0440\u043e\u0441 \u043d\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u043f\u043b\u0430\u0442\u0435\u0436\u0430"
+      },
+      "PaymentCreateResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "description": "\u0423\u0441\u043f\u0435\u0448\u043d\u043e \u043b\u0438 \u0441\u043e\u0437\u0434\u0430\u043d \u043f\u043b\u0430\u0442\u0435\u0436"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "\u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435"
+          },
+          "confirmation_url": {
+            "type": "string",
+            "title": "Confirmation Url",
+            "description": "URL \u0434\u043b\u044f \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f \u043e\u043f\u043b\u0430\u0442\u044b"
+          },
+          "yookassa_payment_id": {
+            "type": "string",
+            "title": "Yookassa Payment Id",
+            "description": "ID \u043f\u043b\u0430\u0442\u0435\u0436\u0430 \u0432 \u042e\u043a\u0430\u0441\u0441\u0435"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "message",
+          "confirmation_url",
+          "yookassa_payment_id"
+        ],
+        "title": "PaymentCreateResponse",
+        "description": "\u041e\u0442\u0432\u0435\u0442: \u043f\u043b\u0430\u0442\u0435\u0436 \u0441\u043e\u0437\u0434\u0430\u043d, \u0432\u043e\u0442 \u0441\u0441\u044b\u043b\u043a\u0430 \u043d\u0430 \u043e\u043f\u043b\u0430\u0442\u0443"
+      },
+      "PaymentStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "waiting_for_capture",
+          "succeeded",
+          "cancelled",
+          "failed"
+        ],
+        "title": "PaymentStatus",
+        "description": "\u0421\u0442\u0430\u0442\u0443\u0441\u044b \u043f\u043b\u0430\u0442\u0435\u0436\u0435\u0439 \u0432 \u0441\u0438\u0441\u0442\u0435\u043c\u0435"
+      },
+      "PaymentWithSubscriptionResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Id",
+            "description": "ID \u043f\u043b\u0430\u0442\u0435\u0436\u0430"
+          },
+          "user_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "subscription_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Subscription Id",
+            "description": "ID \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "yookassa_payment_id": {
+            "type": "string",
+            "title": "Yookassa Payment Id",
+            "description": "ID \u043f\u043b\u0430\u0442\u0435\u0436\u0430 \u0432 \u042e\u043a\u0430\u0441\u0441\u0435"
+          },
+          "amount": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Amount",
+            "description": "\u0421\u0443\u043c\u043c\u0430 \u043f\u043b\u0430\u0442\u0435\u0436\u0430"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "description": "\u0412\u0430\u043b\u044e\u0442\u0430",
+            "default": "RUB"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaymentStatus"
+              }
+            ],
+            "description": "\u0421\u0442\u0430\u0442\u0443\u0441 \u043f\u043b\u0430\u0442\u0435\u0436\u0430"
+          },
+          "payment_method": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payment Method",
+            "description": "\u041c\u0435\u0442\u043e\u0434 \u043f\u043b\u0430\u0442\u0435\u0436\u0430"
+          },
+          "attempt_number": {
+            "type": "integer",
+            "title": "Attempt Number",
+            "description": "\u041d\u043e\u043c\u0435\u0440 \u043f\u043e\u043f\u044b\u0442\u043a\u0438",
+            "default": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "\u0414\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f"
+          },
+          "subscription_plan_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subscription Plan Name",
+            "description": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "subscription_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subscription Status",
+            "description": "\u0421\u0442\u0430\u0442\u0443\u0441 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "refund_amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refund Amount",
+            "description": "\u0421\u0443\u043c\u043c\u0430 \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u0430 (\u0435\u0441\u043b\u0438 \u0435\u0441\u0442\u044c)"
+          },
+          "refund_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refund Status",
+            "description": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u0430 (pending, succeeded, failed, cancelled)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "subscription_id",
+          "yookassa_payment_id",
+          "amount",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PaymentWithSubscriptionResponse",
+        "description": "\u041f\u043b\u0430\u0442\u0435\u0436 \u0441 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0435\u0439 \u043e \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0435 \u0438 \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u0430\u0445"
+      },
+      "Promotion": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Code",
+            "description": "\u041a\u043e\u0434 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "description": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromotionType"
+              }
+            ],
+            "description": "\u0422\u0438\u043f \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430 (\u0442\u043e\u043b\u044c\u043a\u043e bonus_days)"
+          },
+          "value": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Value",
+            "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0431\u043e\u043d\u0443\u0441\u043d\u044b\u0445 \u0434\u043d\u0435\u0439"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Valid From",
+            "description": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f"
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f"
+          },
+          "max_uses": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Uses",
+            "description": "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0439"
+          },
+          "applicable_plans": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Applicable Plans",
+            "description": "\u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u0438\u043c\u0435\u043d\u0438\u043c\u044b\u0445 \u043f\u043b\u0430\u043d\u043e\u0432"
+          },
+          "assigned_user_id": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigned User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f, \u043a\u043e\u0442\u043e\u0440\u043e\u043c\u0443 \u043d\u0430\u0437\u043d\u0430\u0447\u0435\u043d \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434"
+          },
+          "id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Id",
+            "description": "ID \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active",
+            "description": "\u0410\u043a\u0442\u0438\u0432\u0435\u043d \u043b\u0438 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434"
+          },
+          "current_uses": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Current Uses",
+            "description": "\u0422\u0435\u043a\u0443\u0449\u0435\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0439"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "\u0414\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "type",
+          "value",
+          "valid_from",
+          "id",
+          "is_active",
+          "current_uses",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "Promotion",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430 \u0434\u043b\u044f \u043e\u0442\u0432\u0435\u0442\u0430"
+      },
+      "PromotionCreate": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Code",
+            "description": "\u041a\u043e\u0434 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "description": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435"
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromotionType"
+              }
+            ],
+            "description": "\u0422\u0438\u043f \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430 (\u0442\u043e\u043b\u044c\u043a\u043e bonus_days)"
+          },
+          "value": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Value",
+            "description": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0431\u043e\u043d\u0443\u0441\u043d\u044b\u0445 \u0434\u043d\u0435\u0439"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Valid From",
+            "description": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f"
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f"
+          },
+          "max_uses": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Uses",
+            "description": "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0439"
+          },
+          "applicable_plans": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Applicable Plans",
+            "description": "\u0421\u043f\u0438\u0441\u043e\u043a \u043f\u0440\u0438\u043c\u0435\u043d\u0438\u043c\u044b\u0445 \u043f\u043b\u0430\u043d\u043e\u0432"
+          },
+          "assigned_user_id": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigned User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f, \u043a\u043e\u0442\u043e\u0440\u043e\u043c\u0443 \u043d\u0430\u0437\u043d\u0430\u0447\u0435\u043d \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434 (None = \u043e\u0431\u0449\u0438\u0439 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "type",
+          "value",
+          "valid_from"
+        ],
+        "title": "PromotionCreate",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+      },
+      "PromotionType": {
+        "type": "string",
+        "const": "bonus_days",
+        "title": "PromotionType"
+      },
+      "PromotionUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435"
+          },
+          "valid_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid Until",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044f"
+          },
+          "is_active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Active",
+            "description": "\u0410\u043a\u0442\u0438\u0432\u0435\u043d \u043b\u0438 \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434"
+          },
+          "max_uses": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Uses",
+            "description": "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u043e\u0435 \u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0439"
+          }
+        },
+        "type": "object",
+        "title": "PromotionUpdate",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0434\u043b\u044f \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u0440\u043e\u043c\u043e\u043a\u043e\u0434\u0430"
+      },
+      "SubscriptionCreateRequestSchema": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "plan_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Plan Id",
+            "description": "ID \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "start_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start Date",
+            "description": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SubscriptionStatus"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\u0421\u0442\u0430\u0442\u0443\u0441 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "plan_id"
+        ],
+        "title": "SubscriptionCreateRequestSchema",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+      },
+      "SubscriptionDetailResponse": {
+        "properties": {
+          "plan_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Plan Id",
+            "description": "ID \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubscriptionStatus"
+              }
+            ],
+            "description": "\u0421\u0442\u0430\u0442\u0443\u0441 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438",
+            "default": "active"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start Date",
+            "description": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End Date",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Id",
+            "description": "ID \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "user_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "\u0414\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f"
+          },
+          "plan": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubscriptionPlanResponse"
+              }
+            ],
+            "description": "\u0418\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u043e \u043f\u043b\u0430\u043d\u0435 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan_id",
+          "start_date",
+          "end_date",
+          "id",
+          "user_id",
+          "created_at",
+          "updated_at",
+          "plan"
+        ],
+        "title": "SubscriptionDetailResponse",
+        "description": "\u0420\u0430\u0441\u0448\u0438\u0440\u0435\u043d\u043d\u044b\u0439 \u043e\u0442\u0432\u0435\u0442 \u0441 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0435\u0439 \u043e \u043f\u043b\u0430\u043d\u0435"
+      },
+      "SubscriptionPlanCreateRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "description": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043f\u043b\u0430\u043d\u0430"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Price",
+            "description": "\u0426\u0435\u043d\u0430 \u043f\u043b\u0430\u043d\u0430"
+          },
+          "duration_days": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Duration Days",
+            "description": "\u0414\u043b\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0432 \u0434\u043d\u044f\u0445"
+          },
+          "features": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Features",
+            "description": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "duration_days"
+        ],
+        "title": "SubscriptionPlanCreateRequest",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+      },
+      "SubscriptionPlanResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "description": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043f\u043b\u0430\u043d\u0430"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Price",
+            "description": "\u0426\u0435\u043d\u0430 \u043f\u043b\u0430\u043d\u0430"
+          },
+          "duration_days": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Duration Days",
+            "description": "\u0414\u043b\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0432 \u0434\u043d\u044f\u0445"
+          },
+          "features": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Features",
+            "description": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439"
+          },
+          "id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Id",
+            "description": "ID \u043f\u043b\u0430\u043d\u0430"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "\u0414\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "duration_days",
+          "id",
+          "created_at"
+        ],
+        "title": "SubscriptionPlanResponse",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0434\u043b\u044f \u043e\u0442\u0432\u0435\u0442\u0430"
+      },
+      "SubscriptionPlanUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043f\u043b\u0430\u043d\u0430"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price",
+            "description": "\u0426\u0435\u043d\u0430 \u043f\u043b\u0430\u043d\u0430"
+          },
+          "duration_days": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Days",
+            "description": "\u0414\u043b\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0441\u0442\u044c \u0432 \u0434\u043d\u044f\u0445"
+          },
+          "features": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Features",
+            "description": "\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u0435\u0439"
+          }
+        },
+        "type": "object",
+        "title": "SubscriptionPlanUpdate",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0434\u043b\u044f \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+      },
+      "SubscriptionResponse": {
+        "properties": {
+          "plan_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Plan Id",
+            "description": "ID \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SubscriptionStatus"
+              }
+            ],
+            "description": "\u0421\u0442\u0430\u0442\u0443\u0441 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438",
+            "default": "active"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Start Date",
+            "description": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0447\u0430\u043b\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "End Date",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Id",
+            "description": "ID \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "user_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "\u0414\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan_id",
+          "start_date",
+          "end_date",
+          "id",
+          "user_id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "SubscriptionResponse",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0434\u043b\u044f \u043e\u0442\u0432\u0435\u0442\u0430"
+      },
+      "SubscriptionStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "cancelled",
+          "cancelled_waiting",
+          "expired",
+          "pending_payment"
+        ],
+        "title": "SubscriptionStatus"
+      },
+      "SubscriptionWithPaymentRequest": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "User Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "plan_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Plan Id",
+            "description": "ID \u043f\u043b\u0430\u043d\u0430 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "return_url": {
+            "type": "string",
+            "minLength": 10,
+            "title": "Return Url",
+            "description": "URL \u0434\u043b\u044f \u0432\u043e\u0437\u0432\u0440\u0430\u0442\u0430 \u043f\u043e\u0441\u043b\u0435 \u043e\u043f\u043b\u0430\u0442\u044b"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "plan_id",
+          "return_url"
+        ],
+        "title": "SubscriptionWithPaymentRequest",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0434\u043b\u044f \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0441 \u043f\u043b\u0430\u0442\u0435\u0436\u043e\u043c (\u043e\u0431\u044b\u0447\u043d\u043e\u0435 \u043e\u0444\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435 \u0431\u0435\u0437 \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430)"
+      },
+      "SubscriptionWithPaymentResponse": {
+        "properties": {
+          "subscription_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Subscription Id",
+            "description": "ID \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u043e\u0439 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438"
+          },
+          "payment_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Payment Id",
+            "description": "ID \u0441\u043e\u0437\u0434\u0430\u043d\u043d\u043e\u0433\u043e \u043f\u043b\u0430\u0442\u0435\u0436\u0430"
+          },
+          "confirmation_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confirmation Url",
+            "description": "URL \u0434\u043b\u044f \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f \u043e\u043f\u043b\u0430\u0442\u044b (None \u0434\u043b\u044f \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430)"
+          },
+          "yookassa_payment_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Yookassa Payment Id",
+            "description": "ID \u043f\u043b\u0430\u0442\u0435\u0436\u0430 \u0432 \u042e\u043a\u0430\u0441\u0441\u0435 (None \u0434\u043b\u044f \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430)"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "\u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435 \u043e \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0435"
+          },
+          "is_trial": {
+            "type": "boolean",
+            "title": "Is Trial",
+            "description": "\u0424\u043b\u0430\u0433 \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "subscription_id",
+          "payment_id",
+          "message"
+        ],
+        "title": "SubscriptionWithPaymentResponse",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u043e\u0442\u0432\u0435\u0442\u0430 \u043f\u0440\u0438 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0438 \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0438 \u0441 \u043f\u043b\u0430\u0442\u0435\u0436\u043e\u043c"
+      },
+      "TelegramAuth": {
+        "properties": {
+          "telegram_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Telegram Id",
+            "description": "Telegram user ID"
+          }
+        },
+        "type": "object",
+        "required": [
+          "telegram_id"
+        ],
+        "title": "TelegramAuth",
+        "description": "Telegram authentication request"
+      },
+      "Token": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token"
+        ],
+        "title": "Token",
+        "description": "Token response"
+      },
+      "TrialEligibilityResponse": {
+        "properties": {
+          "is_eligible": {
+            "type": "boolean",
+            "title": "Is Eligible",
+            "description": "\u0414\u043e\u0441\u0442\u0443\u043f\u0435\u043d \u043b\u0438 \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434 \u0434\u043b\u044f \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason",
+            "description": "\u041f\u0440\u0438\u0447\u0438\u043d\u0430 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e\u0441\u0442\u0438 (\u0435\u0441\u043b\u0438 is_eligible=False)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_eligible"
+        ],
+        "title": "TrialEligibilityResponse",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u043e\u0442\u0432\u0435\u0442\u0430 \u0434\u043b\u044f \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 \u0434\u043e\u0441\u0442\u0443\u043f\u043d\u043e\u0441\u0442\u0438 \u043f\u0440\u043e\u043c\u043e\u043f\u0435\u0440\u0438\u043e\u0434\u0430"
+      },
+      "User": {
+        "properties": {
+          "telegram_id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Telegram Id",
+            "description": "Telegram ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "id": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Id",
+            "description": "ID \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "\u0420\u043e\u043b\u044c \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "\u0414\u0430\u0442\u0430 \u0441\u043e\u0437\u0434\u0430\u043d\u0438\u044f"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "\u0414\u0430\u0442\u0430 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f"
+          }
+        },
+        "type": "object",
+        "required": [
+          "telegram_id",
+          "id",
+          "role",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "User",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f \u0434\u043b\u044f \u043e\u0442\u0432\u0435\u0442\u0430"
+      },
+      "UserSubscriptionInfo": {
+        "properties": {
+          "active_subscription": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SubscriptionDetailResponse"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "\u0410\u043a\u0442\u0438\u0432\u043d\u0430\u044f \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0430"
+          },
+          "subscription_history": {
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionResponse"
+            },
+            "type": "array",
+            "title": "Subscription History",
+            "description": "\u0418\u0441\u0442\u043e\u0440\u0438\u044f \u043f\u043e\u0434\u043f\u0438\u0441\u043e\u043a"
+          }
+        },
+        "type": "object",
+        "title": "UserSubscriptionInfo",
+        "description": "\u0418\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u043e \u043f\u043e\u0434\u043f\u0438\u0441\u043a\u0430\u0445 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+      },
+      "UserUpdate": {
+        "properties": {
+          "username": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username",
+            "description": "\u0418\u043c\u044f \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+          },
+          "first_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Name",
+            "description": "\u0418\u043c\u044f"
+          },
+          "last_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Name",
+            "description": "\u0424\u0430\u043c\u0438\u043b\u0438\u044f"
+          },
+          "is_active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Active",
+            "description": "\u0410\u043a\u0442\u0438\u0432\u0435\u043d \u043b\u0438 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c"
+          }
+        },
+        "type": "object",
+        "title": "UserUpdate",
+        "description": "\u0421\u0445\u0435\u043c\u0430 \u0434\u043b\u044f \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
